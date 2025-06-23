@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
- 
-
+  <base href="/">
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
@@ -14,6 +13,13 @@
   <meta name="apple-mobile-web-app-title" content="vel_app_online">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
+  <!--  Load Paytm Checkout JS SDK -->
+  <script
+          type="application/javascript"
+          src="https://securegw.paytm.in/merchantpgpui/checkoutjs/merchants/Vidwat55723139543015.js"
+          onload="window.paytmScriptLoaded = true;">
+  </script>
+
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
@@ -21,8 +27,9 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+
 <script>
-  var serviceWorkerVersion = '"531872901"';
+  var serviceWorkerVersion = '"3667435988"';
   var scriptLoaded = false;
 
   function loadMainDartJs() {
@@ -75,6 +82,60 @@
     });
   } else {
     loadMainDartJs();
+  }
+</script>
+
+
+<script>
+  // ✅ This function is called from Flutter via js interop
+  function onScriptLoad(mid, orderId, txnToken, amount,callbackUrl) {
+  console.log("🟢 Paytm onScriptLoad called with:", { mid, orderId, txnToken, amount,callbackUrl });
+
+  const config = {
+    "root": "",
+    "flow": "DEFAULT",
+    "data": {
+      "orderId": orderId,
+      "token": txnToken,
+      "tokenType": "TXN_TOKEN",
+      "amount": amount,
+      "callbackUrl": callbackUrl
+    },
+    "handler": {
+      "transactionStatus": function(data) {
+        console.log("✅ Transaction completed", data);
+
+        if (window.paytmResponseHandler) {
+          window.paytmResponseHandler(data); // Send response back to Flutter
+        }
+      },
+      "notifyMerchant": function(eventName, data) {
+        console.log("📩 notifyMerchant event", eventName, data);
+      }
+    }
+  };
+
+  if (window.paytmScriptLoaded && window.Paytm && window.Paytm.CheckoutJS) {
+    console.log("✅ Paytm SDK is loaded, initializing checkout...");
+    window.Paytm.CheckoutJS.init(config).then(function () {
+      window.Paytm.CheckoutJS.invoke();
+    }).catch(function (error) {
+      console.error("❌ Paytm CheckoutJS init error:", error);
+    });
+  } else {
+    console.error("❌ Paytm JS SDK not loaded or not ready yet.");
+  }
+}
+</script>
+
+<script src='https://cdn.jsdelivr.net/npm/pdfjs-dist@4.6.82/build/pdf.min.mjs' type='module'></script>
+<script type='module'>
+  var { pdfjsLib } = globalThis;
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.6.82/build/pdf.worker.mjs';
+
+  var pdfRenderOptions = {
+    cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.6.82/cmaps/',
+    cMapPacked: true,
   }
 </script>
 </body>
