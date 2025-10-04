@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <base href="/">
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
@@ -28,7 +29,7 @@
 <body>
 
 <script>
-  var serviceWorkerVersion = '"3667435988"';
+  var serviceWorkerVersion = '"3946636183"';
   var scriptLoaded = false;
 
   function loadMainDartJs() {
@@ -107,6 +108,16 @@
         if (window.paytmResponseHandler) {
           window.paytmResponseHandler(data); // Send response back to Flutter
         }
+
+         // Redirect user to a thank you or status page
+  if (data.STATUS === "TXN_SUCCESS") {
+    window.location.href = "https://example-success-page.vercel.app/";
+  } else {
+    window.location.href = "https://example-failure-page.vercel.app/";
+  }
+
+
+
       },
       "notifyMerchant": function(eventName, data) {
         console.log("📩 notifyMerchant event", eventName, data);
