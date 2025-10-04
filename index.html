@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base href="/">
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
@@ -29,7 +28,7 @@
 <body>
 
 <script>
-  var serviceWorkerVersion = '"3946636183"';
+  var serviceWorkerVersion = '"3667435988"';
   var scriptLoaded = false;
 
   function loadMainDartJs() {
@@ -87,9 +86,9 @@
 
 
 <script>
-  // ✅ This function is called from Flutter via js interop
+  //  This function is called from Flutter via js interop
   function onScriptLoad(mid, orderId, txnToken, amount,callbackUrl) {
-  console.log("🟢 Paytm onScriptLoad called with:", { mid, orderId, txnToken, amount,callbackUrl });
+  console.log("Paytm onScriptLoad called with:", { mid, orderId, txnToken, amount,callbackUrl });
 
   const config = {
     "root": "",
@@ -103,37 +102,27 @@
     },
     "handler": {
       "transactionStatus": function(data) {
-        console.log("✅ Transaction completed", data);
+        console.log(" Transaction completed", data);
 
         if (window.paytmResponseHandler) {
           window.paytmResponseHandler(data); // Send response back to Flutter
         }
-
-         // Redirect user to a thank you or status page
-  if (data.STATUS === "TXN_SUCCESS") {
-    window.location.href = "https://example-success-page.vercel.app/";
-  } else {
-    window.location.href = "https://example-failure-page.vercel.app/";
-  }
-
-
-
       },
       "notifyMerchant": function(eventName, data) {
-        console.log("📩 notifyMerchant event", eventName, data);
+        console.log(" notifyMerchant event", eventName, data);
       }
     }
   };
 
   if (window.paytmScriptLoaded && window.Paytm && window.Paytm.CheckoutJS) {
-    console.log("✅ Paytm SDK is loaded, initializing checkout...");
+    console.log("Paytm SDK is loaded, initializing checkout...");
     window.Paytm.CheckoutJS.init(config).then(function () {
       window.Paytm.CheckoutJS.invoke();
     }).catch(function (error) {
-      console.error("❌ Paytm CheckoutJS init error:", error);
+      console.error(" Paytm CheckoutJS init error:", error);
     });
   } else {
-    console.error("❌ Paytm JS SDK not loaded or not ready yet.");
+    console.error("Paytm JS SDK not loaded or not ready yet.");
   }
 }
 </script>
